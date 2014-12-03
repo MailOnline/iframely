@@ -1,3 +1,6 @@
+var http = require('http');
+var rurl = require('url');
+
 module.exports = {
 
     re: [
@@ -14,51 +17,47 @@ module.exports = {
         "favicon"
     ],
 
-    getLinks: function(urlMatch, meta) {
-        var src = 'http://instagram.com/p/' + urlMatch[1] + '/media/?size=';
-        var embed = '//instagram.com/p/' + urlMatch[1] + '/embed/';
+    provides: 'instagram_oembed',
 
-        var links = [
-            {
-                href: embed,
-                type: CONFIG.T.text_html,
-                rel: (meta.og && meta.og.video) ? [CONFIG.R.player, CONFIG.R.html5]: CONFIG.R.app,
-                width: 616,
-                height: 714
-            },
-            // Images.
-            {
-                href: src + 't',
-                type: CONFIG.T.image,
-                rel: CONFIG.R.thumbnail,
-                width: 150,
-                height: 150
-            }, {
-                href: src + 'm',
-                type: CONFIG.T.image,
-                rel: CONFIG.R.thumbnail,
-                width: 306,
-                height: 306
-            }, {
-                href: src + 'l',
-                type: CONFIG.T.image,
-                rel: (meta.og && meta.og.video) ? CONFIG.R.thumbnail : CONFIG.R.image,
-                width: 612,
-                height: 612
-            }];
+    getData: function(url, cb) {
+        var ops = rurl.parse("http://api.instagram.com/oembed");
+        ops.query = {
+            beta: true,
+            url: url
+        };
 
-        if (meta.og && meta.og.video) {
-            links.push({
-                href: meta.og.video.url || meta.og.video,
-                type: meta.og.video.type || CONFIG.T.maybe_text_html,
-                rel: [CONFIG.R.player, CONFIG.R.html5],
-                "aspect-ratio": meta.og.video.width / meta.og.video.height,
-                "max-width": meta.og.video.width,
-                "max-height": meta.og.video.height
+        iurl = rurl.format(ops);
+
+        http.get(iurl,
+            function(res) {
+
+                if (res.statusCode != 200) {
+                    return cb(res.statusCode);
+                }
+
+                var chunks = [];
+                res.on('data', function(chunk) { chunks.push(chunk); });
+
+                res.on('end', function () {
+                    var oembed = JSON.parse(Buffer.concat(chunks));
+                    cb(null, {
+                        title: oembed.title,
+                        instagram_oembed: oembed
+                    });
+                });
+
+            }).on('error', function(e) {
+                cb("Got error: " + e.message);
             });
-        }
+    },
 
-        return links;
+    getLink: function(instagram_oembed) {
+
+        return {
+            type: CONFIG.T.text_html,
+            html: instagram_oembed.html,
+            rel: [CONFIG.R.oembed, CONFIG.R.app, CONFIG.R.inline, CONFIG.R.ssl]
+        };
     },
 
     tests: [{
