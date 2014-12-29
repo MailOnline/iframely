@@ -28,7 +28,7 @@ module.exports = {
 
         iurl = rurl.format(ops);
 
-        http.get(iurl,
+        var req = http.get(iurl,
             function(res) {
 
                 if (res.statusCode != 200) {
@@ -49,6 +49,13 @@ module.exports = {
             }).on('error', function(e) {
                 cb("Got error: " + e.message);
             });
+
+        req.on('socket', function (socket) {
+            socket.setTimeout(5000);
+            socket.on('timeout', function() {
+                req.abort();
+            });
+        });
     },
 
     getLink: function(instagram_oembed) {
