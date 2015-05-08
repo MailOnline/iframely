@@ -1,4 +1,4 @@
-var jquery = require('jquery');
+var $ = require('cheerio');
 
 module.exports = {
 
@@ -23,9 +23,11 @@ module.exports = {
 
     getLink: function(oembed) {
 
-        if (!oembed.provider_name == "Behance") return;
+        if (oembed.provider_name !== "Behance") {
+            return;
+        }
 
-        var $container = jquery('<div>');
+        var $container = $('<div>');
         try {
             $container.html(oembed.html);
         } catch (ex) {}
@@ -34,29 +36,29 @@ module.exports = {
 
 
         // if embed code contains <iframe>, return src
-        if ($iframe.length == 1) {
+        if ($iframe.length === 1) {
 
             return {
                 href: $iframe.attr('src').replace("http://", "https://"),
                 type: CONFIG.T.text_html,
-                rel: [CONFIG.R.reader, CONFIG.R.oembed],
+                rel: [CONFIG.R.reader, CONFIG.R.oembed, CONFIG.R.html5],
                 "min-width": oembed.thumbnail_width,
                 "min-height": oembed.thumbnail_height
             };
         }
     },
 
-    tests: [
+    tests: [{
+        skipMixins: ["copyright", "og-description"]
+    },
         "http://www.behance.net/gallery/ORBITAL-MECHANICS/10105739",
         "http://www.behance.net/gallery/TRIGGER/9939801",
         "http://www.behance.net/gallery/MEGA-CITIES/8406797",
-        "http://portfolios.academyart.edu/gallery/ESCADA-Brand-Website/4706977",
-        "http://portfolios.aiga.org/gallery/Bodega-Portraits/2752591",
         "http://portfolios.sva.edu/gallery/Threshold-Furniture-Design/720916",
         "http://portfolios.scad.edu/gallery/Privy-Boards-Graphic-Shirts/11126843",
-        "http://www.adccreativecrush.org/gallery/Veuve-Clicquot/5998331",
         "http://talent.adweek.com/gallery/ASTON-MARTIN-Piece-of-Art/3043295",
-        "http://portfolios.corcoran.edu/gallery/19270813/Porsche-Concept-Road-Version"
+        "http://ndagallery.cooperhewitt.org/gallery/12332063/Barclays-Center"
+        // possible false positive: http://www.engadget.com/gallery/a-tour-of-qualcomms-connected-home-of-the-future/3251997/
     ]
 
 };

@@ -71,10 +71,9 @@ module.exports = {
     },
 
     getLink: function(twitter_oembed) {
-
         return {
+            html: twitter_oembed.html.replace('<blockquote class="twitter-tweet">', '<blockquote class="twitter-tweet" align="center">'),
             type: CONFIG.T.text_html,
-            html: twitter_oembed.html,
             rel: [CONFIG.R.oembed, CONFIG.R.app, CONFIG.R.inline, CONFIG.R.ssl],
             "min-width": c["min-width"],
             "max-width": c["max-width"]

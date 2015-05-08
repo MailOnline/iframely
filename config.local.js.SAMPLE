@@ -14,11 +14,6 @@
 
         port: 8061,
 
-        // You can set your unique whitelist access url here.
-        // Iframely will periodically load WL updates from remote file.
-        // To get one - go to http://iframely.com/qa
-        WHITELIST_URL: 'http://iframely.com/qa/top100.json',
-
         // Optional SSL cert, if you serve under HTTPS. 
         /*
         ssl: {
@@ -104,10 +99,26 @@
             tumblr: {
                 consumer_key: "INSERT YOUR VALUE"
             },
+            google: {
+                // https://developers.google.com/maps/documentation/embed/guide#api_key
+                // yes, there is already "apiKey" option above, but I am not sure if old keys are the same as the news ones.
+                maps_key: "INSERT YOUR VALUE"
+            },
+
+            /*
+            // Optional Camo Proxy to wrap all images: https://github.com/atmos/camo
+            camoProxy: {
+                camo_proxy_key: "INSERT YOUR VALUE",
+                camo_proxy_host: "INSERT YOUR VALUE"
+            },
+            */
 
             // List of query parameters to add to YouTube and Vimeo frames
             // Start it with leading "?". Or omit alltogether for default values
+            // API key is optional, youtube will work without it too.
+            // It is probably the same API key you use for Google Maps.
             youtube: {
+                // api_key: "INSERT YOUR VALUE",
                 get_params: "?rel=0&showinfo=1"     // https://developers.google.com/youtube/player_parameters
             },
             vimeo: {
@@ -115,12 +126,12 @@
             }
         },
 
-        // WHITELIST_WILDCARD, if present, will be added to whitelist (even absent one) as record for top level domain: "*"
-        // you can change default behavior of the system using this setting. 
-        // E.g. allowing all open-graph players, denying twitter photos, etc.
-        // If absent or empty, all generic media parsers will be disabled by default (only domain plugins will work)
-        // More about format: http://iframely.com/qa/format
+        // WHITELIST_WILDCARD, if present, will be added to whitelist as record for top level domain: "*"
+        // with it, you can define what parsers do when they run accross unknown publisher.
+        // If absent or empty, all generic media parsers will be disabled except for known domains
+        // More about format: https://iframely.com/docs/qa-format
 
+        /*
         WHITELIST_WILDCARD: {  
               "twitter": {
                 "player": "allow",
@@ -133,7 +144,7 @@
                 "link": "deny"
               },
               "og": {
-                "video": ["allow", "ssl"]
+                "video": ["allow", "ssl", "responsive"]
               },
               "iframely": {
                 "survey": "allow",
@@ -145,6 +156,7 @@
                 "video": ["allow", "responsive"]
               }
         }
+        */
     };
 
     module.exports = config;

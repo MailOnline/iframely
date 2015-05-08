@@ -7,9 +7,10 @@
 
     var config = {
 
-        WHITELIST_URL: 'http://iframely.com/qa/top100.json',
+        WHITELIST_URL: 'http://iframely.com/qa/whitelist.json',
         WHITELIST_URL_RELOAD_PERIOD: 60 * 60 * 1000,  // will reload WL every hour, if no local files are found in /whitelist folder
 
+        WHITELIST_WILDCARD: {},
         WHITELIST_LOG_URL: 'http://iframely.com/whitelist-log',
 
         // Default cache engine to prevent warning.
@@ -17,6 +18,7 @@
         CACHE_TTL: 24 * 60 * 60,
 
         CACHE_TTL_PAGE_TIMEOUT: 10 * 60,
+        CACHE_TTL_PAGE_404: 10 * 60,
 
         CLUSTER_WORKER_RESTART_ON_MEMORY_USED: 500 * 1024 * 1024, // 500 MB.
         CLUSTER_MAX_CPU_LOAD_TIME_IN_SECONDS: 20,   // if 20 seconds load over 95% - restart worker.
@@ -25,6 +27,7 @@
         RESPONSE_TIMEOUT: 5 * 1000,
 
         USER_AGENT: "Iframely/" + version + " (+http://iframely.com/;)",
+        VERSION: version,
 
         T: {
             text_html: "text/html",
@@ -37,11 +40,20 @@
             image_icon: "image/icon",
             image_png: "image/png",
             image_svg: "image/svg",
+            image_gif: "image/gif",
             video_mp4: "video/mp4",
-            video_ogg: "video/ogg"
+            video_ogg: "video/ogg",
+            video_webm: "video/webm"
         },
 
+        PROMO_RELS: [
+            "player",
+            "image",
+            "thumbnail"
+        ],
+
         REL_GROUPS: [
+            "promo",
             "app",
             "player",
             "survey",
@@ -85,7 +97,10 @@
             ssl: "ssl",
 
             autoplay: "autoplay",
-            html5: "html5"
+            html5: "html5",
+            gifv: "gifv",
+
+            promo: "promo"
         },
 
         // Whitelist settings.
@@ -141,14 +156,18 @@
             "iframely"
         ],
 
-        OEMBED_RELS_PRIORITY: ["player", "survey", "image", "reader", "app"],
+        OEMBED_RELS_PRIORITY: ["app", "player", "survey", "image", "reader"],
         providerOptions: {
             "readability": {},
             "twitter.status": {}
         }
     };
 
-    var local_config_path = path.resolve(__dirname, "config.local.js");
+    var local_config_path = path.resolve(
+      __dirname,
+      "config." + (process.env.NODE_ENV || "local") + ".js"
+    );
+
     if (fs.existsSync(local_config_path)) {
         var local = require(local_config_path);
         _.extend(config, local);

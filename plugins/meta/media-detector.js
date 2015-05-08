@@ -8,7 +8,7 @@ module.exports = {
 
         if (meta.og) {
 
-            if (meta.og.video || (meta.og.type && typeof meta.og.type === 'string' && meta.og.type.match(/video|movie/i) || /\/video\//i.test(url))) {
+            if (meta.og.video || (meta.og.type && typeof meta.og.type === 'string' && meta.og.type.match(/video|movie/i) || /\/(video|videos)\//i.test(url))) {
 
                 has_player = true;
             }
@@ -39,7 +39,10 @@ module.exports = {
 
         if (has_thumbnail) {
 
-            if (/article|blog|news|post|noticia/i.test(url) || (meta.og && meta.og.type && typeof meta.og.type === 'string' && meta.og.type.match(/article|post/i))) {
+            if (/article|blog|news|post|noticia/i.test(url) 
+                || (/\/(\d{4})\/(\d{2})\/(\d{2})/).test(url) 
+                || (meta.og && meta.og.type && typeof meta.og.type === 'string' && meta.og.type.match(/article|post/i))) {
+                
                 has_reader = true;
             }
         }

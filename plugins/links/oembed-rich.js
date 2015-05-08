@@ -1,22 +1,32 @@
-var jquery = require('jquery');
+var cheerio = require('cheerio');
 
 module.exports = {
 
     getLink: function(oembed, whitelistRecord) {
 
 
-        if (!(oembed.type === "rich" && whitelistRecord && whitelistRecord.isAllowed && whitelistRecord.isAllowed('oembed.rich'))) {
+        if (!(oembed.type === "rich" && whitelistRecord.isAllowed && whitelistRecord.isAllowed('oembed.rich'))) {
             return;
         }
 
         var rels = [CONFIG.R.oembed];
 
-        if (whitelistRecord.isAllowed('oembed.rich', "reader")) rels.push(CONFIG.R.reader);
-        if (whitelistRecord.isAllowed('oembed.rich', "player")) rels.push(CONFIG.R.player);
-        if (rels.length == 1) rels.push(CONFIG.R.app);        
+        if (whitelistRecord.isAllowed('oembed.rich', "reader")) {
+            rels.push(CONFIG.R.reader);
+        }
+        if (whitelistRecord.isAllowed('oembed.rich', "player")) {
+            rels.push(CONFIG.R.player);
+        }
+        if (rels.length == 1) {
+            rels.push(CONFIG.R.app);
+        }
         // if (whitelistRecord.isAllowed('oembed.rich', "responsive")) rels.push("responsive");
-        if (whitelistRecord.isAllowed('oembed.rich', "inline")) rels.push(CONFIG.R.inline);
-        if (whitelistRecord.isAllowed('oembed.rich', "html5")) rels.push(CONFIG.R.html5);
+        if (whitelistRecord.isAllowed('oembed.rich', "inline")) {
+            rels.push(CONFIG.R.inline);
+        }
+        if (whitelistRecord.isAllowed('oembed.rich', "html5")) {
+            rels.push(CONFIG.R.html5);
+        }
         rels.push ("allow"); // otherwise, rich->players get denied by oembed:video whitelist record
 
 
@@ -25,7 +35,7 @@ module.exports = {
             type: CONFIG.T.text_html
         };
 
-        var $container = jquery('<div>');
+        var $container = cheerio('<div>');
         try {
             $container.html(oembed.html5 || oembed.html);
         } catch (ex) {}
@@ -37,7 +47,7 @@ module.exports = {
 
             widget.href = $iframe.attr('src');
 
-            if (whitelistRecord && whitelistRecord.isAllowed('oembed.rich', 'ssl')) {
+            if (whitelistRecord.isAllowed('oembed.rich', 'ssl')) {
                 widget.href = widget.href.replace(/^http:\/\//i, '//');
             }
         
@@ -77,10 +87,12 @@ module.exports = {
 
 
     // tests are only applicable with the whitelist, otherwise will throw errors on Test UI
+    /*
     tests: [
         "http://talent.adweek.com/gallery/ASTON-MARTIN-Piece-of-Art/3043295", //Behance oEmbed rich
         "http://www.behance.net/gallery/REACH/8080889", // Behance default, with '100%' height
         "http://list.ly/list/303-alternatives-to-twitter-bootstrap-html5-css3-responsive-framework" //oembed rich reader
     ]
+    */
 
 };

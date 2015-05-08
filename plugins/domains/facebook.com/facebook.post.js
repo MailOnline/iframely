@@ -7,7 +7,8 @@ module.exports = {
         /^https?:\/\/(www|m)\.facebook\.com\/([a-zA-Z0-9\.\-]+)\/(posts|activity)\/(\d{10,})/i,
         /^https?:\/\/(www|m)\.facebook\.com\/([a-zA-Z0-9\.\-]+)\/photos\/[a-zA-Z0-9\.\-]+\/(\d{10,})/i,
         /^https?:\/\/(www|m)\.facebook\.com\/notes\/([a-zA-Z0-9\.\-]+)\/[^\/]+\/(\d{10,})/i,
-        /^https?:\/\/(www|m)\.facebook\.com\/media\/set\/\?set=[^\/]+(\d{10,})/i
+        /^https?:\/\/(www|m)\.facebook\.com\/media\/set\/\?set=[^\/]+(\d{10,})/i,
+        /^https?:\/\/www\.facebook\.com\/[a-z0-9.]+\/videos\/.+/i
     ],
 
     provides: 'facebook_post',
@@ -26,10 +27,11 @@ module.exports = {
     getLink: function(facebook_post, options) {
         return {
             type: CONFIG.T.text_html,
-            rel: [CONFIG.R.app, CONFIG.R.inline, CONFIG.R.ssl],
+            rel: [CONFIG.R.app, CONFIG.R.ssl, CONFIG.R.html5],
             template_context: {
                 title: facebook_post.title,
                 url: facebook_post.url,
+                type: 'fb-post',
                 width: options.maxWidth || DEFAULT_WIDTH
             },
             width: options.maxWidth || DEFAULT_WIDTH
@@ -38,7 +40,7 @@ module.exports = {
 
     getData: function(url, meta, cb) {
 
-        if (meta["html-title"] == "Facebook") {
+        if (meta["html-title"] === "Facebook") {
             // the content is not public
             cb({responseStatusCode: 403});
         }        
@@ -47,8 +49,9 @@ module.exports = {
 
         // Little hack for FB mobile URLs, as FB embeds don't recognize it's own mobile links.
         var redirect;
-        if (url.indexOf("m.facebook.com/story.php") > -1) 
+        if (url.indexOf("m.facebook.com/story.php") > -1) {
             redirect = url.replace("m.facebook.com/story.php", "www.facebook.com/permalink.php");
+        }
 
         cb(null, {
             facebook_post: {

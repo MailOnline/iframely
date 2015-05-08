@@ -46,7 +46,7 @@ module.exports = {
 
         if (schemaVideoObject.embedURL || schemaVideoObject.embedUrl) {
 
-            var type = CONFIG.T.text_html;
+            var type = CONFIG.T.maybe_text_html;
 
             if (schemaVideoObject.playerType) {
                 if (schemaVideoObject.playerType.toLowerCase().indexOf('Flash') > -1) {
@@ -64,8 +64,12 @@ module.exports = {
                 type: type
             };
 
-            if (whitelistRecord.isAllowed('html-meta.embedURL', 'html5')) player.rel.push(CONFIG.R.html5);
-            if (whitelistRecord.isAllowed('html-meta.embedURL', 'autoplay')) player.rel.push(CONFIG.R.autoplay);
+            if (whitelistRecord.isAllowed('html-meta.embedURL', 'html5')) {
+                player.rel.push(CONFIG.R.html5);
+            }
+            if (whitelistRecord.isAllowed('html-meta.embedURL', 'autoplay')) {
+                player.rel.push(CONFIG.R.autoplay);
+            }
 
             if (whitelistRecord.isAllowed('html-meta.embedURL', 'responsive') || !schemaVideoObject.height) {
                 player["aspect-ratio"] = schemaVideoObject.height ? schemaVideoObject.width / schemaVideoObject.height : 4/3;

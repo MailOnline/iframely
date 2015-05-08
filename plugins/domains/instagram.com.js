@@ -4,15 +4,16 @@ var rurl = require('url');
 module.exports = {
 
     re: [
-        /^https?:\/\/[\w\.]*instagram\.com\/p\/([a-zA-Z0-9_-]+)/i,
-        /^https?:\/\/instagr\.am\/p\/([a-zA-Z0-9_-]+)/i,
-        /^https?:\/\/instagram\.com\/p\/([a-zA-Z0-9_-]+)$/i
+        /^https?:\/\/[\w\.]*instagram\.com\/(?:[a-zA-Z0-9_-]+\/)?p\/([a-zA-Z0-9_-]+)/i,
+        /^https?:\/\/instagr\.am\/(?:[a-zA-Z0-9_-]+\/)?p\/([a-zA-Z0-9_-]+)/i,
+        /^https?:\/\/instagram\.com\/(?:[a-zA-Z0-9_-]+\/)?p\/([a-zA-Z0-9_-]+)$/i
     ],
 
     mixins: [
         "oembed-title",
         "oembed-site",
         "oembed-author",
+        "oembed-thumbnail",
 
         "favicon"
     ],

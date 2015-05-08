@@ -5,7 +5,7 @@ module.exports = {
 
     re: [
         /^https?:\/\/([a-z0-9-]+\.tumblr\.com)\/(post|image)\/(\d+)(?:\/[a-z0-9-]+)?/i,
-        /^https?:\/\/([a-z-\.]+)\/(post|post)\/(\d{11})(?:\/[a-z0-9-]+)?/i
+        /^https?:\/\/([a-z-\.]+)\/(post)\/(\d{9,13})(?:\/[a-z0-9-]+)?/i
     ],    
 
     getLinks: function(tumblr_post) {
@@ -31,7 +31,9 @@ module.exports = {
 
             var title = photo.caption || tumblr_post.caption;
             title = $('<div>').html(title).text();
-            if (title && title.length > 160) title = title.split(/[.,!?]/)[0];
+            if (title && title.length > 160) {
+                title = title.split(/[.,!?]/)[0];
+            }
 
             addImage(title, photo.original_size, CONFIG.R.image);
             var originalWidth = photo.original_size.width;

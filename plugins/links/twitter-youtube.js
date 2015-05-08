@@ -1,10 +1,14 @@
 module.exports = {
 
-    // e.g. http://www.kinitv.com/video/3495O8
-    getLink: function(twitter) {
+    provides: '__promoUri',    
 
+    // e.g. http://www.kinitv.com/video/3495O8
+    getData: function(twitter) {
+        
         var video_src = (twitter.player && twitter.player.value) || twitter.player;
-        if (!video_src) return;
+        if (!video_src) {
+            return;
+        }
 
         var urlMatch = video_src.match(/^https?:\/\/www\.youtube\.com\/v\/([\-_a-zA-Z0-9]+)/i)
                     || video_src.match(/^https?:\/\/www\.youtube-nocookie\.com\/v\/([\-_a-zA-Z0-9]+)/i)
@@ -15,16 +19,22 @@ module.exports = {
 
 
         if (urlMatch) {
-
-            var params = (CONFIG.providerOptions.youtube && CONFIG.providerOptions.youtube.get_params) ? CONFIG.providerOptions.youtube.get_params : "";
-
             return {
-                href: "https://youtube.com/embed/" + urlMatch[1] + params,
-                type: CONFIG.T.text_html,
-                rel: [CONFIG.R.player, CONFIG.R.html5],
-                "aspect-ratio": (twitter.player.height && twitter.player.width) ? twitter.player.width / twitter.player.height : 4/3
-            }
+                __promoUri: "https://www.youtube.com/watch?v=" + urlMatch[1]
+            };
+        } 
 
-        }
+        urlMatch = video_src.match(/^https?:\/\/vimeo\.com\/(\d+)/i)
+                    || video_src.match(/^https?:\/\/player.vimeo\.com\/video\/(\d+)/i)
+                    || video_src.match(/https?:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=(\d+)/i);
+
+
+        if (urlMatch) {
+            return {
+                __promoUri: "https://vimeo.com/" + urlMatch[1]
+            };
+        } 
+
     }
+
 };

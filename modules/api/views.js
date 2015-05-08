@@ -65,8 +65,12 @@ module.exports = function(app) {
                     mixAllWithDomainPlugin: getBooleanParam(req, 'mixAllWithDomainPlugin'),
                     forceParams: req.query.meta === "true" ? ["meta", "oembed"] : null,
                     whitelist: getBooleanParam(req, 'whitelist'),
+                    readability: getBooleanParam(req, 'readability'),
                     getWhitelistRecord: whitelist.findWhitelistRecordFor,
-                    maxWidth: getIntParam(req, 'maxwidth') || getIntParam(req, 'max-width')
+                    maxWidth: getIntParam(req, 'maxwidth') || getIntParam(req, 'max-width'),
+                    promoUri: req.query.promoUri,
+                    forcePromo: getBooleanParam(req, 'forcePromo'),
+                    forOembed: req.query['for'] === 'oembed'
                 }, cb);
             }
 
@@ -190,7 +194,8 @@ module.exports = function(app) {
                 cache.withCache('html:' + version + ':' + uri, function(cb) {
 
                     iframelyCore.run(uri, {
-                        getWhitelistRecord: whitelist.findWhitelistRecordFor
+                        getWhitelistRecord: whitelist.findWhitelistRecordFor,
+                        readability: true
                     }, function(error, data) {
 
                         if (!data || !data.safe_html) {
@@ -254,6 +259,10 @@ module.exports = function(app) {
                     iframelyCore.run(uri, {
                         getWhitelistRecord: whitelist.findWhitelistRecordFor
                     }, function(error, result) {
+
+                        if (error) {
+                            return cb(error);
+                        }
 
                         var render_link = result && _.find(result.links, function(link) {
                             return link.html
@@ -364,7 +373,8 @@ module.exports = function(app) {
                     getWhitelistRecord: whitelist.findWhitelistRecordFor,
                     filterNonSSL: getBooleanParam(req, 'ssl'),
                     filterNonHTML5: getBooleanParam(req, 'html5'),
-                    maxWidth: getIntParam(req, 'maxwidth') || getIntParam(req, 'max-width')
+                    maxWidth: getIntParam(req, 'maxwidth') || getIntParam(req, 'max-width'),
+                    forOembed: req.query['for'] === 'oembed'
                 }, cb);
             }
 

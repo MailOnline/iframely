@@ -1,5 +1,5 @@
 var URL = require("url");
-var jQuery = require("jquery");
+var _ = require('underscore');
 
 module.exports = {
 
@@ -37,7 +37,7 @@ module.exports = {
     },
 
     getMeta: function(magnatune_meta) {
-        var meta = jQuery.extend({}, magnatune_meta);
+        var meta = _.extend({}, magnatune_meta);
         delete meta.embed_url;
         return meta;
     },
@@ -73,7 +73,7 @@ module.exports = {
 
     tests: [{
         page: "http://magnatune.com/",
-        selector: "div[id^='row'] a"
+        selector: "ol li a:first-child"
     },
         "http://magnatune.com/artists/albums/sieber-hidden/",
         "http://magnatune.com/artists/albums/fallingyou-adore/lofi_play"

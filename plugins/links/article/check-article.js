@@ -1,15 +1,13 @@
 module.exports = {
 
-    notPlugin:  !(CONFIG.providerOptions.readability && CONFIG.providerOptions.readability.enabled === true),
+    provides: '__is_general_article',
 
-    provides: '__enable_readability',
-
-    getData: function(meta) {
+    getData: function(meta, __readabilityEnabled) {
 
         if (meta.og && (meta.og.type === "article" || meta.og.type === "blog")) {
 
             return {
-                __enable_readability: true
+                __is_general_article: true
             };
         }
     }

@@ -1,10 +1,10 @@
-var jquery = require('jquery');
+var $ = require('cheerio');
 
 module.exports = {
 
     re: [
         /^https?:\/\/([a-z0-9-]+\.tumblr\.com)\/(post|image)\/(\d+)(?:\/[a-z0-9-]+)?/i,
-        /^https?:\/\/([a-z-\.]+)\/(post|post)\/(\d{11})(?:\/[a-z0-9-]+)?/i
+        /^https?:\/\/([a-z-\.]+)\/(post)\/(\d{9,13})(?:\/[a-z0-9-]+)?/i
     ], 
 
     getLinks: function(tumblr_post, cb) {
@@ -26,7 +26,7 @@ module.exports = {
 
             var p = tumblr_post.player[0];
 
-            var $c = jquery('<div>').append(p.embed_code);
+            var $c = $('<div>').append(p.embed_code);
             var $iframe = $c.find('iframe');
 
             if ($iframe.length) {

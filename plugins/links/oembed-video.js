@@ -1,11 +1,11 @@
-var jquery = require('jquery');
+var cheerio = require('cheerio');
 
 module.exports = {
 
     getLink: function(oembed, whitelistRecord) {
 
 
-        if (!(oembed.type === "video" && whitelistRecord && whitelistRecord.isAllowed && whitelistRecord.isAllowed('oembed.video'))) {
+        if (!(oembed.type === "video" && whitelistRecord.isAllowed && whitelistRecord.isAllowed('oembed.video'))) {
             return;
         }
 
@@ -15,7 +15,7 @@ module.exports = {
         };
 
 
-        var $container = jquery('<div>');
+        var $container = cheerio('<div>');
         try {
             $container.html(oembed.html5 || oembed.html);
         } catch (ex) {}
@@ -27,7 +27,7 @@ module.exports = {
         if ($iframe.length == 1) {
             player.href = $iframe.attr('src');
 
-            if (whitelistRecord && whitelistRecord.isAllowed('oembed.video', 'ssl')) {
+            if (whitelistRecord.isAllowed('oembed.video', 'ssl')) {
                 player.href = player.href.replace(/^http:\/\//i, '//');
             }
 
@@ -62,9 +62,10 @@ module.exports = {
 
 
     // tests are only applicable with the whitelist, otherwise will throw errors on Test UI
+    /*
     tests: [
-        "http://sports.pixnet.net/album/video/183041064", // This is one oEmbed.video with a <script>!
-        "http://video.yandex.ua/users/enema-bandit/view/11/?ncrnd=4917#hq",  //oEmbed.video - iframe
+        "http://sports.pixnet.net/album/video/183041064", 
+        "http://video.yandex.ua/users/enema-bandit/view/11/?ncrnd=4917#hq"
     ]
-
+    */
 };

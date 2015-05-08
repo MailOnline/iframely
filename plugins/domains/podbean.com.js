@@ -15,7 +15,7 @@ module.exports = {
         var $iframe = cheerio('.podPress_content iframe');
         if ($iframe.length) {
             return {
-                href: $iframe.attr('src'),
+                href: $iframe.attr('src').replace('http://', '//'),
                 type: CONFIG.T.text_html,
                 rel: [CONFIG.R.player, CONFIG.R.html5],
                 width: $iframe.attr('width'),
@@ -30,7 +30,7 @@ module.exports = {
 
             if (id_match) {
                 return {
-                    href: 'http://www.podbean.com/media/player/audio/postId/' + id_match[1] + '/url/' + encodeURI(url) + '/initByJs/1/auto/1',
+                    href: '//www.podbean.com/media/player/audio/postId/' + id_match[1] + '/url/' + encodeURI(url) + '/initByJs/1/auto/1',
                     type: CONFIG.T.text_html,
                     rel: [CONFIG.R.player, CONFIG.R.html5],
                     'min-width': 225,
@@ -45,7 +45,7 @@ module.exports = {
     }, {
         pageWithFeed: 'http://anfieldindex.podbean.com'
     }, {
-        skipMixins: ['keywords']
+        skipMixins: ['keywords', 'favicon']
     },
         "http://thebarometer.podbean.com/e/science-communication-the-ipcc-and-a-goodbye-day-5-at-egu-2014/",
         "http://thehashtaghunter.podbean.com/e/law-of-attraction/"

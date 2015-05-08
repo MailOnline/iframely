@@ -1,8 +1,93 @@
-# Iframely Gateway Changelog
+# Iframely Changelog
 
-This is the history of the Iframely Gateway changes. Updates that are older than 1 year are not shown.
+This is the history of the Iframely changes. Updates that are older than one year are not shown.
 
 Stay tuned, either by watching [Iframely on GitHub](https://github.com/itteco/iframely) or following [Iframely on Twitter](https://twitter.com/iframely).
+
+
+### 2015.05.07, Version 0.8.5
+
+- Urgent fix for YouTube as they retired v2 API. 
+- Set `config.providerOptions.youtube.api_key` with your Google API key to restore all previous features. See sample local config.
+- API key is optional: if not given the parsers will fallback to oEmbed data. 
+- It may be the same key you have for new Google Maps, yet copy it in other option.
+
+
+### 2015.05.06, Version 0.8.3
+
+
+- New Google Maps plugin to support current URL scheme (Google finally stopped re-directing our user-agent to their classic URLs)
+- Google Maps require API key: get it [here](https://developers.google.com/maps/documentation/embed/guide#api_key) and configure as `providerOptions.google.maps_key` - see sample local config
+- Support of [Camo Proxy](https://github.com/atmos/camo) for all images (thanks guys from Redbooth). See sample config to activate
+- Fixes for Spotify and minor fixes for other domains
+- Restored domain plugin for The Guardian
+
+
+### 2015.04.02, Version 0.8.2
+
+- Fixes for some domain plugins like path.com, visual.ly, prezi, deviantart, storify, roomshare.jp
+- Twitter statuses can now have variable width (through `&maxwidth` param) and are aligned to center
+- New Facebook Video embeds. Yay!
+- New plugins for CartoDB, wasu.cn, ku6.com, datpiff.com, tudou.com, deezer
+
+
+
+### 2015.03.04, Version 0.8.0
+
+*Heads up:* 
+
+Starting from this version, the minimal Node.js version required for Iframely is 0.10.22. We had to make a choice to either support latest Node.js or earlier version due to incompatible libraries dependenices. Please, run 'npm update' to update libraries. Unfortunatelly, update likely won't work if your Node is earlier than 0.10.22.
+
+
+- Instagram status JS embeds with rel `app`
+- Tumblr status JS embeds with rel `app` (beware: embeds don't work with SSL)
+- International domains for Pinterest
+- Google custom maps
+- YouTube playlists and timed embeds
+- Google+ posts for international usernames. Plus, properly exclude posts in groups
+- Medium stories will now have JS embeds too
+- Fix issues with caching of JSONP requests
+- Number of fixes in various other plugins
+
+
+### 2014.12.30, Version 0.7.2
+
+Happy 2015! Iframely domains whitelist is now free and is delivered to every server instance. Over 1600 domains at the moment!
+
+Other changes in this version:
+
+ - New `gifv` rel for players. Following Imgur's footsteps, it is to indicate MP4 videos that represent gifs and need to be shown as looping video. 
+ - New `promo` rel, to indicate that embed is attached to the URL. For example, YouTube's used by domains in Twitter cards and Open Graph videos will now be returned with a lot more options and with rel `promo`. 
+ - The same `promo` approach covers all Brightcove's players used on the domains. 
+ - Gfycat is a new embeds provider (with `gifv` player)
+ - HBR.org, tudou.com, forgifs.com, Google Drive - also added as new providers
+ - As whitelist is available to everyone now, we removed some of domains that are covered all right by generic parsers
+ - Whitelist now works for hosted oEmbed domains too. It looks at oEmbed discovery and if no domain record found, adds one by API domain. It coveres, for example, all custom domains of SmugMug, WordPress and Behance.
+ - Number of domains have been cleaned up. Pinterest boards, for one. 
+
+ Cheerio library has been updated to a newer version. Please, `npm update`.
+
+
+ Happy 2015 again! And thanks for all your support in 2014!
+
+
+
+### 2014.11.21, Version 0.7.1
+
+This version contains mostly the cleanup of the domains plugins. Some of the most significant improvements are these:
+
+ - Proper handling of Imgur gifs that they changed recently
+ - Gallery embed for Flickr user profile pages
+ - Vine plugin uses newly introduced oEmbed endpoint. Processing time is now down to 50-70ms
+ - Google Plus posts with vanity URLs are finally supported
+ - Google Docs support
+ - Handle Tumblr's new 12-digit post IDs
+ - New or improved embed codes for C-Span, Reuters, Comedy Central, Rap Genius, Giphy, Real player cloud
+
+The package dependencies updated some libraries. Please, run `npm update` to use newer verisons.
+
+In the other news, we published [oEmbed API](http://oembedapi.com) for the use in open-source projects. Take a look.
+
 
 
 ### 2014.10.15, Version 0.7.0
@@ -244,127 +329,10 @@ _Beware_: The interfaces of Iframely core lib have slightly changed and remain u
  * Post processing of the embed links and meta has been moved to system plugins as well, to make it asynchronous too. 
 
 
- 
-
-### 2014.01.28, Version 0.5.8
-
-Happy 2014! While we work on re-implementing of Iframely's core to make it even faster and more robust, here's the long overdue maintenance release. 
-
-New features:
-
- + Cluster mode. To run Iframely as cluster - `node cluster`. It is useful for 64bit hardware, and also as a way to manage server's uptime. 
- + Domains DB whitelist file can now be loaded via URL. Set `WHITELIST_URL` in your local config file to your custom access URL, and Iframely will keep loading central whitelist as our QA updates it. Local whitelist files still prevail over loading via URL.
-
-Domain maintenance: 
-
- + Added Brightcove parser _and_ all hosted players
- + Added PBS.org videos _and_ all hosted sites
- + Custom parser for Vevo (as replacement of the old .fixme one)
- + Support SmugMug galleries
- + Custom parser for Yahoo Screen
- + Custom parser for Imgur's static URLs (#31)
- * Properly fix Imgur's kitten bombs in oEmbed
- + Added Imgur's galleries
- + Parser for Globe And Mail videos
- + Parser for Pando Daily videos
- * Fix Google+ posts by removing unsupported URL schemes
- * Fix Metacafe for their new URL scheme
- * New URL scheme for CollegeHumor pictures
- * Allow YouTube own embeds URLs as input parameter 
- * Changed user-agent string so that all Yahoo sites don't redirect to their mobile versions (thus, blocking all whitelist records)
- * Restore responsiveness of Viddy, Trutv, Revision3
- * Fix for whitelisted Twitter Photo, when there is a fallback to OG image
- * Allow older GitHub gists (the ones without a title and different URL scheme)
- * Fix 9gag photos
- * Cover more URLs on CNN videos, Wistia, Kinja and ec.europa.eu
- * Some performance improvements
-
-
-### 2013.11.28, Version 0.5.7
-
-This maintenance update is focused on domain plugins. Please remember to update regularly as domains change their websites and we maintain Iframely plugins accordingly. 
-
- + Finally, a plugin for Vube.com (Alexa rank 69, and they had API issues before)
- + Added plugin for Codepen.io
- + Plugin for Dribbble
- + Screencast (including videos)
- + Tinypic
- + Pastebin
- + About.me
- + Plugins for Haiku Deck & Slid.es (courtesy @peacemoon)
- + Fixes for CNN videos
- + Fixes for BravoTV, Eventbrite, Angellist and Wikimedia
- + By popular demand: Customization of YouTube and Vimeo players. 
-
-To customize YouTube and Vimeo embeds, add your settings to the local config file (which is git-ignored when updating):
-
-        providerOptions: {
-          // ...
-
-            // List of query parameters to add to YouTube and Vimeo frames
-            // Start it with leading "?". Or omit altogether for default values
-            youtube: {
-                get_params: "?rel=0&showinfo=1"
-                // https://developers.google.com/youtube/player_parameters
-            },
-            vimeo: {
-                get_params: "?byline=0&badge=0"
-                // http://developer.vimeo.com/player/embedding
-            }
-        }
-
-
-Also, [Iframely Domains DB](http://iframely.com/qa) has recently reached 1500 entries.
-
-
-### 2013.11.11, Version 0.5.6
-
-Please, run following to update package dependencies:
-
-    rm -r node_modules/iframely-readability
-    npm update
-
- * Fixed JSDOM memory leaks in `iframely-readability` package and when using `$selector` plugin requirement
- * Fixed IE<=9.0 window resize events (#29 - strings instead of JSON in `postMessage`)
- + HTTPs support (thanks @fent)
- + Links to files now get properly proxied (see #31). Images and video files now be properly rendered. Javascript is excluded for security reasons.
- + [Domains] Plugins for entire Gawker family (Life Hacker, Gawker, Gizmodo, Jezebel, Deadspin, io9, kotaku, jalopnik)
- * [Domains] Fix Livestream, Twitcam, official.fm, NHL, Angel List and Giphy plugins
- * [Domains] Allow responsive Prezi (no more browser freezes detected)
- - [Domains] Disable Vevo as they don't publish embeds in meta at the moment :\
- + [Domains] Explicit Habrahabr.ru parser (conflicted with Tumblr custom domains)
-
-
-### 2013.10.30, Version 0.5.5
-
- * Iframely now has the wildcard whitelist record, which gives you an option to decide upfront which generic parsers to allow. For example, you default to white list open graph videos, but deny Twitter photos. The settings will be overwritten if you have a record for specific domains. 
- * HEADS UP: Please, create a `WHITELIST_WILDCARD` in your local config (or copy from sample config). If this record is absent, Iframely will only allow the parsers from domain plugins and those that have explicit domain record in the domains DB.
- * Fixed that nasty bandwidth leak on high load
- * Improved overall performance by adding Gzip encoding for outgoing traffic (to 3rd party sites that Iframely parses). Improves response times and saves traffic for both you and destination domains. 
- * Decreased server load if Readability parsing is enabled with a better pattern to detect potential articles.
- * Replaced custom code for image size detection with arnaud-lb/imagesize.js lib. Run `npm install` when updating.
- * Fixed Tumblr parsers, and extended it to Tumblr's custom domains.
- - Removed client-side jQuery and Bootstrap from the content of the package.
- * Improve image size loading with 'imagesize' package.
-
-
-### 2013.10.16, Version 0.5.4
-
- * improve articles loading time: added caching for Readability library
- * improve api response time: cache each request to Iframely server
- + added oembed reader plugin for proper whitelist record (oembed.link with reader)
- * updated TechCrunch plugin to properly parse their new site design
- * fixed and improved AngelList, MyVideo.de, Bravotv
- * changed Twitter regexps to allow processing of statues and photos only (eliminating extra load)
- + added PollDaddy
-
-
-### 2013.10.02, Version 0.5.3
-
- + New `/oembed` endpoint, the backwards compatability adapter for [oEmbed v1](http://oembed.com). See [example](http://iframely.com/oembed?url=http://vimeo.com/62092214)
 
 
 
 
 
-(c) 2013 [Itteco Software Corp](http://itteco.com). Licensed under MIT. [Get it on Github](https://github.com/itteco/iframely)
+
+(c) 2013-2015 [Itteco Software Corp](http://itteco.com). Licensed under MIT. [Get it on Github](https://github.com/itteco/iframely)

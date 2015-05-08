@@ -23,9 +23,9 @@
     {
         "name": "Scribd",
         "templates": [
-            "(www\\.)?scribd\\.com/doc/.*"
+            "((?:www\\.)?scribd\\.com)/(?:doc|book|read)/(.*)"
         ],
-        "endpoint": "http://www.scribd.com/services/oembed"
+        "endpoint": "http://www.scribd.com/services/oembed?format={format}&url=https://{1}/doc/{2}"
     },
     {
         "name": "Viddler",
@@ -44,10 +44,15 @@
     {
         "name": "YouTube",
         "templates": [
-            "(www\\.)?youtube\\.com/watch.*",
-            "youtu\\.be/*"
+            "(?:www\\.)?youtube\\.com/(?:tv#/)?watch\\?(?:[^&]+&)*v=([a-zA-Z0-9_-]+)",
+            "youtu\\.be/([a-zA-Z0-9_-]+)",
+            "m\\.youtube\\.com/#/watch\\?(?:[^&]+&)*v=([a-zA-Z0-9_-]+)",
+            "www\\.youtube\\.com/embed/([a-zA-Z0-9_-]+)",
+            "www\\.youtube\\.com/v/([a-zA-Z0-9_-]+)",
+            "www\\.youtube\\.com/user/[a-zA-Z0-9_-]+\\?v=([a-zA-Z0-9_-]+)",
+            "www\\.youtube-nocookie\\.com/v/([a-zA-Z0-9_-]+)"
         ],
-        "endpoint": "http://www.youtube.com/oembed"
+        "endpoint": "http://www.youtube.com/oembed?format={format}&url=https://www.youtube.com/watch?v={1}"
     },
     {
         "name": "Qik",
@@ -147,15 +152,24 @@
     {
         "name": "Instagr.am",
         "templates": [
-            "[\\w\\.]*instagram\\.com/p/([a-zA-Z0-9-]+)",
-            "instagr\\.am/p/([a-zA-Z0-9-]+)"
+            "([\\w\\.]*instagram\\.com/p/([a-zA-Z0-9_-]+))",
+            "(instagr\\.am/p/([a-zA-Z0-9_-]+))"
         ],
-        "endpoint": "http://api.instagram.com/oembed"
+        "endpoint": "http://api.instagram.com/oembed?format={format}&url=http://{1}"
+    },
+    {
+        "name": "Instagr.am user page",
+        "templates": [
+            "([\\w\\.]*instagram\\.com/)[a-zA-Z0-9_-]+/(p/[a-zA-Z0-9_-]+)",
+            "(instagr\\.am/)[a-zA-Z0-9_-]+/(p/[a-zA-Z0-9_-]+)"
+        ],
+        "endpoint": "http://api.instagram.com/oembed?format={format}&url=http://{1}{2}"
     },
     {
         "name": "DailyMotion",
         "templates": [
-            "www\\.dailymotion\\.com/video/.+"
+            "www\\.dailymotion\\.com/video/.+",
+            "www\\.dailymotion\\.com/embed/video/.+"
         ],
         "endpoint": "http://www.dailymotion.com/services/oembed"
     },
@@ -239,13 +253,6 @@
         "endpoint": "http://www.mixcloud.com/oembed/"
     },
     {
-        "name": "Kickstarter",
-        "templates": [
-            "\\w+\\.kickstarter\\.com/projects/.*"
-        ],
-        "endpoint": "http://www.kickstarter.com/services/oembed"
-    },
-    {
         "name": "Coub",
         "templates": [
             "coub\\.com/view/.*",
@@ -314,16 +321,11 @@
         "endpoint": "http://api.meetup.com/oembed"
     },
     {
-        "name": "Haiku Deck",
-        "templates": [
-            "www\\.haikudeck\\.com/p/.*"
-        ],
-        "endpoint": "http://www.haikudeck.com/oembed"
-    },
-    {
         "name": "Behance",
         "templates": [
-            "www\\.behance\\.net/gallery/.*"
+            "www\\.behance\\.net/gallery/.*",
+            "[^w]+\\.\\w+\\.\\w+/gallery/[\\w-]+/\\d+",
+            "[^w]+\\.\\w+\\.\\w+/gallery/\\d+/[\\w-]+"
         ],
         "endpoint": "http://www.behance.net/services/oembed"
     },
@@ -344,7 +346,7 @@
     {
         "name": "Spotify",
         "templates": [
-            "open\\.spotify\\.com/.*"
+            "(open|embed|play)\\.spotify\\.com/.*"
         ],
         "endpoint": "https://embed.spotify.com/oembed/"
     },
@@ -354,6 +356,47 @@
             "issuu\\.com/.*"
         ],
         "endpoint": "http://issuu.com/oembed"
-    }    
-
+    },
+    {
+        "name": "Droplr",
+        "templates": [
+            "d.pr/i/.*"
+        ],
+        "endpoint": "http://d.pr/oembed"
+    },
+    {
+        "name": "Vine",
+        "templates": [
+            "vine.co/v/([a-zA-Z0-9-]+)"
+        ],
+        "endpoint": "https://vine.co/oembed/{1}.{format}"
+    },
+    {
+        "name": "Tumblr",
+        "templates": [
+            "[a-z0-9-]+\\.tumblr\\.com/(post|image)/\\d+"
+        ],
+        "endpoint": "https://www.tumblr.com/oembed/1.0"
+    },
+    {
+        "name": "DeviantArt",
+        "templates": [
+            ".*\\.deviantart\\.com/art/.*"
+        ],
+        "endpoint": "http://backend.deviantart.com/oembed"
+    },
+    {
+        "name": "roomshare.jp",
+        "templates": [
+            "roomshare\\.jp/post/\\d+"
+        ],
+        "endpoint": "http://roomshare.jp/oembed.xml?url=http://{0}"
+    },
+    {
+        "name": "cartodb.com",
+        "templates": [
+            "\\w+.cartodb.com/(u\\w+/)?viz/[a-z0-9-]+"
+        ],
+        "endpoint": "http://services.cartodb.com/oembed"
+    }
 ]

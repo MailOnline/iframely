@@ -5,7 +5,7 @@ module.exports = {
 
     re: [
         /^https?:\/\/([a-z0-9-]+\.tumblr\.com)\/(post|image)\/(\d+)(?:\/[a-z0-9-]+)?/i,
-        /^https?:\/\/([a-z-\.]+)\/(post|post)\/(\d{11})(?:\/[a-z0-9-]+)?/i
+        /^https?:\/\/([a-z-\.]+)\/(post)\/(\d{9,13})(?:\/[a-z0-9-]+)?/i
     ],
 
     provides: 'tumblr_post',
@@ -13,7 +13,9 @@ module.exports = {
     getMeta: function(tumblr_post) {
 
         var caption = tumblr_post.caption ? $('<div>').html(tumblr_post.caption).text() : "";
-        if (caption && caption.length > 160) caption = caption.split(/[.,!?]/)[0];
+        if (caption && caption.length > 160) {
+            caption = caption.split(/[.,!?]/)[0];
+        }
 
         return {
             title: tumblr_post.title || caption || tumblr_post.blog_name,
@@ -54,7 +56,7 @@ module.exports = {
         if (!CONFIG.providerOptions.tumblr || !CONFIG.providerOptions.tumblr.consumer_key) {
             cb (new Error ("No tumblr.consumer_key configured"));
             return;
-        }        
+        }
 
         request({
             uri: "http://api.tumblr.com/v2/blog/" + urlMatch[1] + "/posts",

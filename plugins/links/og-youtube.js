@@ -1,9 +1,13 @@
 module.exports = {
 
-    getLink: function(og) {
+    provides: '__promoUri',
+
+    getData: function(og) {
         
         var video_src = (og.video && og.video.url) || og.video;
-        if (!video_src) return;
+        if (!video_src) {
+            return;
+        }
 
         var urlMatch = video_src.match(/^https?:\/\/www\.youtube\.com\/v\/([\-_a-zA-Z0-9]+)/i)
                     || video_src.match(/^https?:\/\/www\.youtube-nocookie\.com\/v\/([\-_a-zA-Z0-9]+)/i)
@@ -12,18 +16,24 @@ module.exports = {
                     || video_src.match(/https?:\/\/www.youtube\.com\/watch\?v=([\-_a-zA-Z0-9]+)/i)
                     || video_src.match(/https?:\/\/youtu\.be\/([\-_a-zA-Z0-9]+)/i);
 
+        if (urlMatch) {
+            return {
+                __promoUri: "https://www.youtube.com/watch?v=" + urlMatch[1]
+            };
+        }
+
+
+        urlMatch = video_src.match(/^https?:\/\/vimeo\.com\/(\d+)/i)
+                    || video_src.match(/^https?:\/\/player.vimeo\.com\/video\/(\d+)/i)
+                    || video_src.match(/https?:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=(\d+)/i);
+
 
         if (urlMatch) {
-
-            var params = (CONFIG.providerOptions.youtube && CONFIG.providerOptions.youtube.get_params) ? CONFIG.providerOptions.youtube.get_params : "";
-
             return {
-                href: "https://youtube.com/embed/" + urlMatch[1] + params,
-                type: CONFIG.T.text_html,
-                rel: [CONFIG.R.player, CONFIG.R.html5],
-                "aspect-ratio": (og.video.height && og.video.width) ? og.video.width / og.video.height : 4/3
-            }
+                __promoUri: "https://vimeo.com/" + urlMatch[1]
+            };
+        } 
 
-        }
+
     }
 };

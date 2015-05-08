@@ -2,26 +2,25 @@ var DEFAULT_WIDTH = 600;
 
 module.exports = {
 
-    re: /^https?:\/\/(?:www\.)?pinterest\.com\/((?!pin)[a-z0-9]+)\/([\w\-]+)\/?(?:$|\?|#)/i,
+    re: /^https?:\/\/(?:www\.)?pinterest\.com\/((?!pin)[a-zA-Z0-9%]+)\/([a-zA-Z0-9%\-]+)\/?(?:$|\?|#)/i,
 
     mixins: [
-        "og-image",
         "favicon",
         "canonical",
-        "og-description",
+        "description",
         "og-site",
-        "og-title"
-    ],    
+        "html-title"
+    ],
 
-    getLink: function(url, og, options) {
+    getLink: function(url, twitter, options) {
 
-        if (og.type !== 'pinterestapp:pinboard') {
+        if (twitter.app && twitter.app.iphone && twitter.app.iphone.indexOf('board/') == -1) {
             return;
         }
 
         return {
             type: CONFIG.T.text_html,
-            rel: [CONFIG.R.app, CONFIG.R.inline, CONFIG.R.ssl],
+            rel: [CONFIG.R.app, CONFIG.R.ssl, CONFIG.R.html5],
             template: "pinterest.widget",
             template_context: {
                 url: url,
@@ -41,6 +40,7 @@ module.exports = {
         noFeeds: true
     },
         "http://pinterest.com/bcij/art-mosaics/",
-        "http://pinterest.com/bcij/aging-gracefully/"
+        "http://pinterest.com/bcij/aging-gracefully/",
+        "https://www.pinterest.com/mimimememe/office-humor-work-jokes/"
     ]
 };
