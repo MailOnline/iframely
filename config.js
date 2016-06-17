@@ -33,7 +33,7 @@
         VERSION: version,
 
         SKIP_IFRAMELY_RENDERS: false,
-        DEFAULT_ASPECT_RATIO: 4 / 3,
+        DEFAULT_ASPECT_RATIO: 16 / 9,
 
         T: {
             text_html: "text/html",
@@ -47,6 +47,7 @@
             image_png: "image/png",
             image_svg: "image/svg",
             image_gif: "image/gif",
+            image_webp: "image/webp",
             video_mp4: "video/mp4",
             video_ogg: "video/ogg",
             video_webm: "video/webm"
@@ -78,7 +79,8 @@
             "height",
             "min-height",
             "max-height",
-            "aspect-ratio"
+            "aspect-ratio",
+            "padding-bottom"
         ],
 
         R: {
@@ -139,7 +141,8 @@
                 "photo"
             ],
             "html-meta": [  // TODO: Need change to 'fb'.
-                "video"
+                "video",
+                "embedURL"
             ]
         },
 

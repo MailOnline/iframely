@@ -8,6 +8,9 @@
         baseAppUrl: "http://yourdomain.com",
         relativeStaticUrl: "/r",
 
+        // Or just skip built-in renders altogether
+        SKIP_IFRAMELY_RENDERS: true,
+
         // For legacy reasons the response format of Iframely open-source is
         // different by default as it does not group the links array by rel.
         // In order to get the same grouped ressonse as in Cloud API,
@@ -23,7 +26,8 @@
             // /^https?:\/\/yourdomain\.com\//,
         ],
 
-        port: 8061,
+        port: 8061, //can be overridden by PORT env var
+        host: 'localhost', //can be overridden by HOST env var
 
         // Optional SSL cert, if you serve under HTTPS. 
         /*
@@ -93,29 +97,36 @@
             params: {
                 show_posts: 0,
                 show_facepile: 0,
-                "maxwidth": 600
+                maxwidth: 600
+            }
+        }, {
+            // match i=user or i=moment or i=timeline to configure these types invidually
+            // see params spec at https://dev.twitter.com/web/embedded-timelines/oembed
+            re: [/^https?:\/\/publish\.twitter\.com\/oembed\?i=user/i],
+            params: {
+                limit: 1,
+                maxwidth: 600
             }
         }],
+
+        /*
+        // Configure use of HTTP proxies as needed
+        PROXY: [{
+            re: [/^https?:\/\/www\.domain\.com/],
+            proxy_server: 'http://1.2.3.4:8080',
+            // user_agent: 'CHANGE YOUR AGENT'
+        }],
+        */
 
         // Customize API calls to 3rd parties. At the very least - configure required keys.
         providerOptions: {
             "twitter": {
                 "max-width": 550,
                 "min-width": 250,
-                consumer_key: 'INSERT YOUR VALUE',
-                consumer_secret: 'INSERT YOUR VALUE',
-                access_token: 'INSERT YOUR VALUE',
-                access_token_secret: 'INSERT YOUR VALUE',
                 hide_media: false,
                 hide_thread: false,
-                omit_script: false
-            },
-            flickr: {
-                apiKey: 'INSERT YOUR VALUE'
-                // media_only: true     // disables slideshow and gives plain image
-            },
-            "google.maps": {
-            //  apiKey: 'INSERT YOUR VALUE' // not required, but recommended
+                omit_script: false,
+                cache_ttl: 100 * 365 * 24 * 3600 // 100 Years.
             },
             readability: {
                 enabled: false
@@ -130,8 +141,7 @@
                 // media_only: true     // disables status embeds for images and videos - will return plain media
             },
             google: {
-                // https://developers.google.com/maps/documentation/embed/guide#api_key
-                // yes, there is already "apiKey" option above, but I am not sure if old keys are the same as the news ones.
+                // https://developers.google.com/maps/documentation/embed/guide#api_key                
                 maps_key: "INSERT YOUR VALUE"
             },
 
@@ -163,6 +173,21 @@
                 media_only: true // disables branded player for gifs and returns just the image
             }
             */
+            /*
+            bandcamp: {
+                get_params: '/size=large/bgcol=333333/linkcol=ffffff/artwork=small/transparent=true/',
+                media: {
+                    album: {
+                        height: 472,
+                        'max-width': 700
+                    }, 
+                    track: {
+                        height: 120,
+                        'max-width': 700
+                    }
+                }
+            }
+            */            
         },
 
         // WHITELIST_WILDCARD, if present, will be added to whitelist as record for top level domain: "*"
@@ -192,7 +217,8 @@
                 "image": "allow"
               },
               "html-meta": {
-                "video": ["allow", "responsive"]
+                "video": ["allow", "responsive"],
+                "promo": "allow"
               }
         }
         */

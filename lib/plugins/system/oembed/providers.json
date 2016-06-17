@@ -39,9 +39,11 @@
     {
         "name": "Flickr",
         "templates": [
-            "(www\\.)?flickr\\.com/.*"
+            "(?:www\\.)?flickr\\.com/(photos/[@a-zA-Z0-9_\\.-]+/?(?:[?#].*)?$)",
+            "(?:www\\.)?flickr\\.com/(photos/[@a-zA-Z0-9_\\.-]+/\\d+.*?$)",
+            "(?:www\\.)?flickr\\.com/(photos/[@a-zA-Z0-9_\\.-]+/(?:sets|albums)/(?:\\d+))"
         ],
-        "endpoint": "http://www.flickr.com/services/oembed/"
+        "endpoint": "http://www.flickr.com/services/oembed/?format={format}&url=https://www.flickr.com/{1}"
     },
     {
         "name": "Hulu",
@@ -114,15 +116,6 @@
         "endpoint": "http://www.collegehumor.com/oembed.{format}"
     },
     {
-        "name": "Poll Everywhere",
-        "templates": [
-            "www\\.polleverywhere\\.com/polls/.*",
-            "www\\.polleverywhere\\.com/multiple_choice_polls/.*",
-            "www\\.polleverywhere\\.com/free_text_polls/.*"
-        ],
-        "endpoint": "http://www.polleverywhere.com/services/oembed/"
-    },
-    {
         "name": "My Opera",
         "templates": [
             "my\\.opera\\.com/.*"
@@ -166,19 +159,28 @@
         "endpoint": "http://public-api.wordpress.com/oembed/1.0/?format={format}&for=iframely&url={url}"
     },
     {
-        "name": "Twitter",
-        "templates": [
-            "twitter\\.com/#?!?/?\\w+/status/(\\d+)"
-        ],
-        "endpoint": "https://api.twitter.com/1/statuses/oembed.{format}?id={1}"
-    },
-    {
         "name": "Twitter Moments",
         "templates": [
             "twitter\\.com/i/moments/(\\d+)"
         ],
-        "endpoint": "https://publish.twitter.com/oembed.json"
-    },    
+        "endpoint": "https://publish.twitter.com/oembed?i=moment&url={url}"
+    },
+    {
+        "name": "Twitter Timelines",
+        "templates": [
+            "twitter\\.com/(\\w+)/timelines/(\\d+)",
+            "twitter\\.com/(\\w+)/lists/(\\w+)",
+            "twitter\\.com/(\\w+)/likes"
+        ],
+        "endpoint": "https://publish.twitter.com/oembed?i=timeline&url={url}"
+    },
+    {
+        "name": "Twitter Users",
+        "templates": [
+            "twitter\\.com/(\\w+)$"
+        ],
+        "endpoint": "https://publish.twitter.com/oembed?i=user&url={url}"
+    },
     {
         "name": "Gist",
         "templates": [
@@ -220,7 +222,8 @@
     {
         "name": "SoundCloud",
         "templates": [
-            "soundcloud\\.com/.+"
+            "soundcloud\\.com/.+",
+            "api\\.soundcloud\\.com\/tracks\\/\\d+"
         ],
         "endpoint": "http://soundcloud.com/oembed"
     },
@@ -250,9 +253,9 @@
     {
         "name": "500px",
         "templates": [
-            "500px\\.com/photo/(\\d+).*"
+            "500px\\.com/photo/(\\d+)\\[a-zA-Z0-9_-]+"
         ],
-        "endpoint": "http://500px.com/photo/{1}/oembed.{format}"
+        "endpoint": "https://500px.com/oembed"        
     },
     {
         "name": "Dipdive",
@@ -383,9 +386,9 @@
     {
         "name": "Spotify",
         "templates": [
-            "(open|embed|play)\\.spotify\\.com/.*"
+            "((?:open|embed|play)\\.spotify\\.com/)(?:embed/)?([^\\?]*)\\??.*"
         ],
-        "endpoint": "https://embed.spotify.com/oembed/"
+        "endpoint": "https://embed.spotify.com/oembed/?url=https://{1}{2}&format={format}"
     },
     {
         "name": "Issuu",
@@ -433,7 +436,7 @@
     {
         "name": "cartodb.com",
         "templates": [
-            "\\w+.cartodb.com/(?:u\/[a-zA-Z0-9-]+/)?viz/[a-z0-9-]+"
+            "\\w+.cartodb\\.com/(?:u\/[a-zA-Z0-9-]+/)?viz/[a-z0-9-]+"
         ],
         "endpoint": "http://services.cartodb.com/oembed"
     },
@@ -450,5 +453,42 @@
             "stock.adobe.com/.*"
         ],
         "endpoint": "https://stock.adobe.com/oembed"
-    }
+    },
+    {
+        "name": "Reddit comment",
+        "templates": [
+            "(?:www\\.|m\\.)?reddit\\.com/r/([^\/]+)/comments/([a-zA-Z0-9]+)/([a-zA-Z0-9_]+)/([a-zA-Z0-9]+)"
+        ],
+        "endpoint": "https://www.reddit.com/oembed"
+    },
+    {
+        "name": "Interlude",
+        "templates": [
+            "interlude.fm/v/([a-zA-Z0-9-]+)"
+        ],
+        "endpoint": "https://v.interlude.fm/oembed?vid={1}"
+    },
+    {
+        "name": "Academie de Bordeaux etc",
+        "templates": [
+            "([a-z0-9]+)\\.ac\\-(\\w+)\\.fr/mediacad/default/media/display(?:[\\/a-z0-9]+)?/(m/\\d+)",
+            "([a-z0-9]+)\\.ac\\-(\\w+)\\.fr/mediacad/(m/\\d+)",
+            "([a-z0-9]+)\\.ac\\-(\\w+)\\.fr/(m/\\d+)"            
+        ],
+        "endpoint": "http://{1}.ac-{2}.fr/mediacad/default/media/display/{3}/d/j?format={format}"
+    },
+    {
+        "name": "RTL XL",
+        "templates": [
+            "rtlxl\\.nl/#!/[^\/]+/([a-zA-Z0-9-]+)"
+        ],
+        "endpoint": "http://xlapi.rtl.nl/version=1/fun=oembed?url={1}"
+    },
+    {
+        "name": "Ranker",
+        "templates": [
+            "(?:www\\.)?ranker\\.com/widget/([0-9]+)"
+        ],
+        "endpoint": "https://widget.ranker.com/oembed/{1}?for={format}"
+    }    
 ]

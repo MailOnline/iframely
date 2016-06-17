@@ -24,10 +24,11 @@ module.exports = {
             return cb (new Error ("No youtube.api_key configured"));
         }
 
-        var statsUri = "https://www.googleapis.com/youtube/v3/videos?part=id%2Csnippet%2Cstatistics%2CcontentDetails%2Cplayer&key=" + api_key + "&id=" + urlMatch[1];
+        var statsUri = "https://www.googleapis.com/youtube/v3/videos?part=id%2Csnippet%2Cstatistics%2CcontentDetails%2Cplayer%2Cstatus&key=" + api_key + "&id=" + urlMatch[1];
 
         request({
             uri: statsUri,
+            cache_key: "youtube:gdata:" + urlMatch[1],
             json: true,
             prepareResult: function(error, b, data, cb) {
 
@@ -67,7 +68,9 @@ module.exports = {
                         viewCount: entry.statistics && entry.statistics.viewCount,
 
                         hd: entry.contentDetails && entry.contentDetails.definition == "hd",
-                        playerHtml: entry.player && entry.player.embedHtml
+                        playerHtml: entry.player && entry.player.embedHtml,
+                        embeddable: entry.status ? entry.status.embeddable: true,
+                        uploadStatus: entry.status && entry.status.uploadStatus
                     };
 
                     if (entry.snippet && entry.snippet.thumbnails ) {
@@ -78,9 +81,13 @@ module.exports = {
                         gdata.duration = duration;
                     }
 
-                    cb(null, {
-                        youtube_video_gdata: gdata
-                    });
+                    if (gdata.uploadStatus === "rejected") {
+                        cb({responseStatusCode: 410});
+                    } else {
+                        cb(null, {
+                            youtube_video_gdata: gdata
+                        });
+                    }
 
                 } else if (data.error && (data.error.code == 400 || data.error.code == 429)) {
 
@@ -105,6 +112,7 @@ module.exports = {
             likes: youtube_video_gdata.likeCount,
             dislikes: youtube_video_gdata.dislikeCount,
             views: youtube_video_gdata.viewCount,
+            media: 'player', 
             site: "YouTube"
         };
     },
@@ -143,7 +151,7 @@ module.exports = {
         var autoplay = params + (params.indexOf ('?') > -1 ? "&": "?") + "autoplay=1";
 
         // Detect widescreen videos. YouTube API used to have issues with returing proper aspect-ratio.
-        var widescreen = youtube_video_gdata.hd; 
+        var widescreen = youtube_video_gdata.hd || (youtube_video_gdata.thumbnails && youtube_video_gdata.thumbnails.maxres != null);
 
         if (!widescreen && youtube_video_gdata.playerHtml) { // maybe still widescreen
             var $container = cheerio('<div>');
@@ -161,24 +169,30 @@ module.exports = {
         
 
         var links = [{
-            href: 'https://www.youtube.com/embed/' + youtube_video_gdata.id + params,
-            rel: [CONFIG.R.player, CONFIG.R.html5],
-            type: CONFIG.T.text_html,
-            "aspect-ratio": widescreen ? 16 / 9 : 4 / 3
-        }, {
-            href: 'https://www.youtube.com/embed/' + youtube_video_gdata.id + autoplay,
-            rel: [CONFIG.R.player, CONFIG.R.html5, CONFIG.R.autoplay],
-            type: CONFIG.T.text_html,
-            "aspect-ratio": widescreen ? 16 / 9 : 4 / 3
-        }, {
-            href: youtube_video_gdata.thumbnails.mq && youtube_video_gdata.thumbnails.mq.url,
+            href: youtube_video_gdata.thumbnails && youtube_video_gdata.thumbnails.mq && youtube_video_gdata.thumbnails.mq.url,
             rel: CONFIG.R.thumbnail,
             type: CONFIG.T.image_jpeg,
             width: 320,
             height: 180
         }];
 
-        if (youtube_video_gdata.thumbnails.maxres) {
+        if (youtube_video_gdata.embeddable) {
+            links.push({
+                href: 'https://www.youtube.com/embed/' + youtube_video_gdata.id + params,
+                rel: [CONFIG.R.player, CONFIG.R.html5],
+                type: CONFIG.T.text_html,
+                "aspect-ratio": widescreen ? 16 / 9 : 4 / 3
+            }); 
+
+            links.push({
+                href: 'https://www.youtube.com/embed/' + youtube_video_gdata.id + autoplay,
+                rel: [CONFIG.R.player, CONFIG.R.html5, CONFIG.R.autoplay],
+                type: CONFIG.T.text_html,
+                "aspect-ratio": widescreen ? 16 / 9 : 4 / 3
+            });
+        }
+
+        if (youtube_video_gdata.thumbnails && youtube_video_gdata.thumbnails.maxres) {
             links.push({
                 href: youtube_video_gdata.thumbnails.maxres.url,
                 rel: CONFIG.R.thumbnail,
@@ -192,7 +206,7 @@ module.exports = {
 
         if (!widescreen) {
             links.push({
-                href: youtube_video_gdata.thumbnails.hq && youtube_video_gdata.thumbnails.hq.url,
+                href: youtube_video_gdata.thumbnails && youtube_video_gdata.thumbnails.hq && youtube_video_gdata.thumbnails.hq.url,
                 rel: CONFIG.R.thumbnail,
                 type: CONFIG.T.image_jpeg,
                 width: 480,
@@ -208,5 +222,6 @@ module.exports = {
     },
         "http://www.youtube.com/watch?v=etDRmrB9Css",
         "http://www.youtube.com/embed/Q_uaI28LGJk"
+        // embeds disabled - https://www.youtube.com/watch?v=e58FeKOgsU8
     ]
 };

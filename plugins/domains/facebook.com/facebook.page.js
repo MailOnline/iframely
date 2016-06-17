@@ -5,12 +5,25 @@ module.exports = {
         /^https?:\/\/(www|m)\.facebook\.com\/([a-zA-Z0-9\.\-]+)\/?(?:\?f?ref=\w+)?$/i
     ],
 
-    getLink: function(meta, oembed, options) {
+    getMeta: function(oembed, urlMatch) {
 
-        // skip user profiles - they can not be embedded
-        if (meta.al && meta.al.android && meta.al.android.url && /\/profile\//.test(meta.al.android.url)) {
-           return;
+        if (oembed.html) {
+
+            var title = oembed.html.match(/>([^<>]+)<\/a><\/blockquote>/i);
+            title = title ? title[1] : urlMatch[2];
+
+            return {
+                title: title
+            };
         }
+    },    
+
+    getLink: function(oembed, meta, options) {
+
+        // skip user profiles - they can not be embedded        
+        if ((meta.al && meta.al.android && meta.al.android.url && /\/profile\//.test(meta.al.android.url)) || !/blockquote/.test(oembed.html)) {
+           return;
+        }        
 
         return {
             type: CONFIG.T.text_html,
