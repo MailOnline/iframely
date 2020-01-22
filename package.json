@@ -28,7 +28,7 @@
         "connect":      "2.7.9",
         "ejs":          "2.3.4",
         "moment":       "2.10.6",
-        "chokidar":     "1.2.0",
+        "chokidar":     "2.0.0",
         "jsontoxml":    "0.0.11",
 
         "sax":          "1.1.3",
