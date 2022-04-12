@@ -19,7 +19,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "async": "2.4.1",
+        "async": "3.2.2",
         "cheerio": "0.22.0",
         "chokidar": "^3.3.1",
         "ejs": "2.5.7",
