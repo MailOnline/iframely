@@ -42,7 +42,7 @@
         "entities":     "0.3.x",
         "imagesize":    "1.0.0",
         "iconv-lite":   "0.2",
-        "mimelib":      "0.2",
+        "mimelib":      "0.3",
         "oauth":        "0.9",
 
         "redis":        "0.8.3",
