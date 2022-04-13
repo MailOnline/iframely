@@ -21,7 +21,7 @@
     "license": "MIT",
     "dependencies": {
         "@adobe/helix-fetch": "^3.0.0",
-        "async": "2.4.1",
+        "async": "3.2.2",
         "cheerio": "^0.22.0",
         "chokidar": "^3.5.2",
         "ejs": "^3.1.6",
@@ -34,7 +34,7 @@
         "jslint": "^0.12.1",
         "jsontoxml": "0.0.11",
         "memcached": "2.2.2",
-        "moment": "2.29.1",
+        "moment": "2.29.2",
         "node-cache": "1.*",
         "parse-iso-duration": "1.0.0",
         "probe-image-size": "^5.0.0",
