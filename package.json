@@ -21,7 +21,7 @@
 
         "heapdump":     "0.1.0",
 
-        "jslint":       "0.1.9",
+        "jslint":       "0.12.1",
         "async":        "0.2.8",
         "underscore":   "1.4.4",
         "jsdom":        "0.8.8",
