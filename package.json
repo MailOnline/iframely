@@ -38,7 +38,7 @@
         "mongoose":     "2.5",
 
         "sax":          "0.3",
-        "htmlparser2":  "3.1.x",
+        "htmlparser2":  "8.0.x",
         "entities":     "0.3.x",
         "imagesize":    "1.0.0",
         "iconv-lite":   "0.2",
