@@ -136,7 +136,7 @@ export default {
     },
 
     getData: function(options) {
-        options.followHTTPRedirect = false; // avoids login re-directs on /likes that blocked oEmbed discovery
+        options.followHTTPRedirect = true; // avoids login re-directs on /likes that blocked oEmbed discovery
         options.exposeStatusCode = true;
         return {
             __allowTwitterOg: true

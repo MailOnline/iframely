@@ -68,7 +68,7 @@ export default {
 
                 if (/pic\.twitter\.com/i.test(oembed.html) && options.getProviderOptions("twitter.thumbnail", false)) {
                     result.__allowTwitterOg = true;
-                    options.followHTTPRedirect = false; // avoid core's re-directs. Use HTTP request redirects instead
+                    options.followHTTPRedirect = true; // avoid core's re-directs. Use HTTP request redirects instead
                     options.exposeStatusCode = true;
                 } else {
                     result.twitter_og = {};
