@@ -1,5 +1,3 @@
-import * as utils from '../../../lib/utils.js';
-
 export default {
 
     re: [
@@ -24,7 +22,7 @@ export default {
     },
 
     //HTML parser will 404 if BC account or player does not exist.
-    getLinks: function(url, iframe, options, cb) {
+    getLinks: function(url, iframe, utils, options, cb) {
 
         var player = {
             type: CONFIG.T.text_html,
@@ -84,7 +82,6 @@ export default {
     },
 
     tests: [{skipMixins:['oembed-error']},
-        "https://players.brightcove.net/5132998173001/default_default/index.html?videoId=5795255604001",
         "http://players.brightcove.net/pages/v1/index.html?accountId=5660549837001&playerId=default&videoId=6303785895001&mode=iframe"
         // But sometimes thumbnail aspect is actually incorrect while oembed default is correct:
         // https://players.brightcove.net/5132998173001/default_default/index.html?videoId=5795255604001

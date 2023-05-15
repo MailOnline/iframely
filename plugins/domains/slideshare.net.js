@@ -1,36 +1,19 @@
-import * as utils from '../../lib/utils.js';
-
 export default {
 
     mixins: [
         // "*" // Linking to * will enable oembed-rich and will result in incorrect aspect-ratios
-            "twitter-image",
-            "oembed-thumbnail",
-            "favicon",
-            "oembed-author",
-            "canonical",
-            "description",
-            "oembed-site",
-            "oembed-title",
-            "oembed-iframe"
+        "twitter-image",
+        "oembed-thumbnail",
+        "favicon",
+        "oembed-author",
+        "canonical",
+        "description",
+        "oembed-site",
+        "oembed-title",
+        "oembed-iframe",
     ],
 
-    getMeta: function(meta) {
-
-        if (meta.slideshare) {
-            var data = meta.slideshare;
-            return {
-                views: data.view_count,
-                date: data.published || data.created_at || data.updated_at,
-                category: data.category,
-                likes: data.favorites_count,
-                author_url: /^https:\/\//.test(data.author) ? data.author : null
-            }
-        }
-
-    },
-
-    getLink: function(oembed, iframe, options, cb) {
+    getLink: function(oembed, iframe, utils, options, cb) {
 
         if (iframe.src && oembed.slide_image_baseurl && oembed.slide_image_baseurl_suffix) {
 
